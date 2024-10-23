@@ -1,5 +1,12 @@
 VENV_CMD := . venv/bin/activate &&
 
+.PHONY: test
+test:
+	ruff check --no-fix
+	ruff format --check
+	mypy
+	pytest -vv --cov=main --cov-report=term-missing --cov-report xml
+
 .PHONY: build
 build:
 	docker build -t er-outputs-secrets:test .
