@@ -1,11 +1,10 @@
-VENV_CMD := . venv/bin/activate &&
-
 .PHONY: test
 test:
-	ruff check --no-fix
-	ruff format --check
-	mypy
-	pytest -vv --cov=main --cov-report=term-missing --cov-report xml
+	unset UV_FROZEN && uv lock --locked
+	uv run ruff check --no-fix
+	uv run ruff format --check
+	uv run mypy
+	uv run pytest -vv --cov=main --cov-report=term-missing --cov-report xml
 
 .PHONY: build
 build:
@@ -13,7 +12,4 @@ build:
 
 .PHONY: dev-venv
 dev-venv:
-	python3.11 -m venv venv
-	@$(VENV_CMD) pip install --upgrade pip
-	@$(VENV_CMD) pip install -r requirements/requirements.txt
-	@$(VENV_CMD) pip install -r requirements/requirements-dev.txt
+	uv sync
